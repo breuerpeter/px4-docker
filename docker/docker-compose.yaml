@@ -1,0 +1,109 @@
+services:
+  px4-dev-nuttx:
+    build:
+      context: .
+      dockerfile: nuttx.Dockerfile
+    image: px4-dev-nuttx
+    container_name: px4-dev-nuttx
+    privileged: true
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+    # Run as root to allow access to mounted SD cards and USB devices
+    # user: "user"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ../:/px4-devenv:rw
+      - type: bind
+        source: /media/${USER}
+        target: /media
+        bind:
+          propagation: rshared
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude:/root/.claude
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude.json:/root/.claude.json
+    environment:
+      - LOCAL_USER_ID=${UID}
+    ports:
+      - "14556:14556"
+    command: tail -f /dev/null
+  px4-dev-sitl:
+    build:
+      context: .
+      dockerfile: sitl.Dockerfile
+    image: px4-dev-sitl
+    container_name: px4-dev-sitl
+    privileged: true
+    tty: true
+    stdin_open: true
+    network_mode: host
+    volumes:
+      - ../:/px4-docker:rw
+      - ../../px4/:/px4-docker/px4
+      - /tmp/X11-unix:/tmp/X11-unix # Fix GUI
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude:/root/.claude
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude.json:/root/.claude.json
+    environment:
+      - LOCAL_USER_ID=${UID:-1000}
+      - DISPLAY=:0
+      - GCS_TARGET_IP=host.docker.internal
+    command: tail -f /dev/null
+  px4-dev-sitl-dds:
+    build:
+      context: .
+      dockerfile: sitl_dds.Dockerfile
+    image: px4-dev-sitl-dds
+    container_name: px4-dev-sitl-dds
+    depends_on:
+      - px4-dev-sitl # todo: check
+    privileged: true
+    tty: true
+    stdin_open: true
+    network_mode: host
+    volumes:
+      - ../:/px4-devenv:rw
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude:/root/.claude
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude.json:/root/.claude.json
+    environment:
+      - LOCAL_USER_ID=${UID}
+      - DISPLAY=:0
+    command: tail -f /dev/null
+  px4-dev-sitl-dds-headless:
+    build:
+      context: .
+      dockerfile: sitl_dds.Dockerfile
+    image: px4-dev-sitl-dds-headless
+    container_name: px4-dev-sitl-dds-headless
+    depends_on:
+      - px4-dev-sitl # todo: check
+    privileged: true
+    tty: true
+    stdin_open: true
+    network_mode: host
+    volumes:
+      - ../:/px4-devenv:rw
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude:/root/.claude
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude.json:/root/.claude.json
+    environment:
+      - LOCAL_USER_ID=${UID}
+    command: tail -f /dev/null
+  px4-dev-sitl-dds-custom:
+    build:
+      context: ..
+      dockerfile: devcontainers/sitl_dds_custom.Dockerfile
+    image: px4-dev-sitl-dds-custom
+    container_name: px4-dev-sitl-dds-custom
+    privileged: true
+    tty: true
+    stdin_open: true
+    network_mode: host
+    volumes:
+      - ../:/px4-devenv:rw
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude:/root/.claude
+      - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude.json:/root/.claude.json
+    environment:
+      - LOCAL_USER_ID=${UID}
+      - DISPLAY=:0
+    command: tail -f /dev/null
