@@ -63,7 +63,8 @@ services:
     stdin_open: true
     network_mode: host
     volumes:
-      - ../:/px4-devenv:rw
+      - ../:/px4-docker:rw
+      - ../../px4/:/px4-docker/px4
       - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude:/root/.claude
       - ${HOME:-${USERPROFILE}/Desktop/code/personal/pc-setup/ubuntu/config/claude_code}/.claude.json:/root/.claude.json
     environment:

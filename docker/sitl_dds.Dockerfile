@@ -14,4 +14,5 @@ RUN git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git && \
 COPY sitl_dds_entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+WORKDIR px4-docker
 ENTRYPOINT ["/entrypoint.sh"]
