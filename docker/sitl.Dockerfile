@@ -14,8 +14,8 @@ RUN ARCH=$(dpkg --print-architecture) && \
     rm mavp2p_${MAVP2P_VERSION}_linux_${ARCH}.tar.gz
 
 COPY gcs_mavlink_router.sh /gcs_mavlink_router.sh
-RUN chmod +x /gcs_mavlink_router.sh && \
-    echo '/gcs_mavlink_router.sh' >> /etc/bash.bashrc
+RUN chmod +x /gcs_mavlink_router.sh
+# RUN echo '/gcs_mavlink_router.sh' >> /etc/bash.bashrc
 
 WORKDIR px4-docker
 
