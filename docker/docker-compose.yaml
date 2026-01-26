@@ -27,7 +27,36 @@ services:
     ports:
       - "14556:14556"
     command: tail -f /dev/null
-  px4-dev-sitl:
+  px4-sitl-newton:
+    build:
+      context: .
+      dockerfile: sitl_newton.Dockerfile
+    image: px4-sitl-newton
+    container_name: px4-sitl-newton
+    privileged: true
+    tty: true
+    stdin_open: true
+    network_mode: host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ../:/px4-docker:rw
+      - ../../px4/:/px4-docker/px4
+    environment:
+      - LOCAL_USER_ID=${UID:-1000}
+      - GCS_TARGET_IP=host.docker.internal
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    command: tail -f /dev/null
+  px4-sitl-gz:
     build:
       context: .
       dockerfile: sitl_gz.Dockerfile
