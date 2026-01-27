@@ -15,6 +15,8 @@ make px4_sitl newton_astro
 
 Then open `http://127.0.0.1:9090` in your browser to see the visualization.
 
+Note: to run on a remote server, connect with port forwarding (required for Rerun web viewer) using `ssh -L 9090:localhost:9090 -L 9876:localhost:9876 <user>@<remote-ip>`, and open `http://127.0.0.1:9090/?url=rerun%2Bhttp%3A%2F%2F127.0.0.1%3A9876%2Fproxy` in your browser after following the steps above.
+
 ## Usage (with the Gazebo simulator)
 
 ```
