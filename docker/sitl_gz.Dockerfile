@@ -17,6 +17,6 @@ COPY gcs_mavlink_router.sh /gcs_mavlink_router.sh
 RUN chmod +x /gcs_mavlink_router.sh
 # RUN echo '/gcs_mavlink_router.sh' >> /etc/bash.bashrc
 
-WORKDIR px4-docker
+WORKDIR px4-docker/px4
 
 RUN git config --global --add safe.directory '*'

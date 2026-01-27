@@ -53,4 +53,6 @@ RUN pip3 install --no-cache-dir \
 	'toml>=0.9' \
 	'sympy>=1.10.1'
 
+WORKDIR px4-docker/px4
+
 RUN git config --global --add safe.directory '*'

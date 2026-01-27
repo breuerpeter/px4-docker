@@ -10,7 +10,6 @@
 cd docker
 docker compose up px4-sitl-newton
 docker exec -it px4-sitl-newton bash
-cd px4-docker/px4
 make px4_sitl newton_astro
 ```
 
@@ -22,7 +21,6 @@ Then open `http://127.0.0.1:9090` in your browser to see the visualization.
 cd docker
 docker compose up px4-sitl-gz -d
 docker exec -it px4-sitl-gz bash
-cd px4
 HEADLESS=1 make px4_sitl gz_x500
 ```
 
