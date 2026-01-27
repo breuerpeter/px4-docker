@@ -16,7 +16,8 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ../:/px4env:rw
+      - ..:/px4-docker:rw
+      - ../../px4:/px4-docker/px4
       - type: bind
         source: /media/${USER}
         target: /media
