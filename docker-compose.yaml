@@ -1,10 +1,10 @@
 services:
-  px4-nuttx:
+  px4-fmu:
     build:
       context: .
-      dockerfile: nuttx.Dockerfile
-    image: px4-nuttx
-    container_name: px4-nuttx
+      dockerfile: fmu.Dockerfile
+    image: px4-fmu
+    container_name: px4-fmu
     privileged: true
     cap_add:
       - SYS_PTRACE
@@ -16,17 +16,14 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - ..:/px4-docker:rw
-      - ../../px4:/px4-docker/px4
+      - ..:/px4:rw
       - type: bind
         source: /media/${USER}
         target: /media
         bind:
           propagation: rshared
     environment:
-      - LOCAL_USER_ID=${UID}
-    ports:
-      - "14556:14556"
+      - LOCAL_USER_ID=${UID:-1000}
     command: tail -f /dev/null
   px4-sitl-newton:
     build:
@@ -38,8 +35,6 @@ services:
     tty: true
     stdin_open: true
     network_mode: host
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     runtime: nvidia
     deploy:
       resources:
@@ -49,11 +44,8 @@ services:
               count: all
               capabilities: [gpu]
     volumes:
-      - ../:/px4-docker:rw
-      - ../../px4/:/px4-docker/px4
+      - ..:/px4:rw
     environment:
-      - LOCAL_USER_ID=${UID:-1000}
-      - GCS_TARGET_IP=host.docker.internal
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
     command: tail -f /dev/null
@@ -106,7 +98,7 @@ services:
       - ../:/px4-docker:rw
       - ../../px4/:/px4-docker/px4
     environment:
-      - LOCAL_USER_ID=${UID}
+      - LOCAL_USER_ID=${UID:-1000}
       - DISPLAY=:0
     command: tail -f /dev/null
   px4-sitl-gz-dds-headless:
@@ -124,7 +116,7 @@ services:
     volumes:
       - ../:/px4env:rw
     environment:
-      - LOCAL_USER_ID=${UID}
+      - LOCAL_USER_ID=${UID:-1000}
     command: tail -f /dev/null
   px4-sitl-dds-custom:
     build:
@@ -139,6 +131,6 @@ services:
     volumes:
       - ../:/px4env:rw
     environment:
-      - LOCAL_USER_ID=${UID}
+      - LOCAL_USER_ID=${UID:-1000}
       - DISPLAY=:0
     command: tail -f /dev/null
